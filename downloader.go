@@ -43,6 +43,7 @@ func main() {
 		return
 	}
 
+	fmt.Printf("[+] Connecting to %s\n", serverAddr)
 	conn, err := minecraft.Connect(serverAddr)
 	if err != nil {
 		fmt.Printf("Failed to connect to %s: %v\n", serverAddr, err)
@@ -91,7 +92,7 @@ func main() {
 	}
 	f.Close()
 	zipFile.Close()
-	fmt.Printf("Packs saved to %s\n", f.Name())
+	fmt.Printf("[+] Packs saved to %s\n", f.Name())
 
 	sshAddr := args[2]
 	sshConf := scp.NewSSHConfigFromPassword(username, password)
@@ -101,10 +102,12 @@ func main() {
 		fmt.Printf("Failed to connect to %s: %v\n", args[2], err)
 		return
 	}
-	fmt.Printf("Copying file %s to remote: %s\n", f.Name(), sshAddr)
+	fmt.Printf("[+] Copying file %s to remote: %s\n", f.Name(), sshAddr)
 
 	err = scpClient.CopyFileToRemote(f.Name(), fmt.Sprintf("/root/decryptmypack.com/packs/%s/%s/%s.zip", addr, port, addr), &scp.FileTransferOption{})
 	if err != nil {
 		fmt.Printf("Failed to copy file to remote: %v\n", err)
 	}
+
+	fmt.Println("[+] Done")
 }
